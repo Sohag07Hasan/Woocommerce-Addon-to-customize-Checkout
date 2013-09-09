@@ -26,6 +26,9 @@ class WooCheckoutCustomization{
 		add_action('woocommerce_settings_tabs_surcharge', array(&$this, 'populate_new_settings_tab'));
 		//save the settings tabe
 		add_action('woocommerce_update_options_surcharge', array(&$this, 'save_new_settings_tab'));
+		
+		//minimum order checking and surcharge add
+		add_action('woocommerce_calculate_totals', array(&$this, 'add_surcharge_if_applicable'));
 	}
 	
 	
@@ -103,6 +106,26 @@ class WooCheckoutCustomization{
 	
 	function get_surcharge_amount(){
 		return get_option('woocommerce_surcharge_amount');
+	}
+	
+	
+	//add surcharge amount if applicable
+	function add_surcharge_if_applicable($cart){		
+		global $woocommerce;
+		
+		$minimum_order_amount = $this->get_minimum_order_amount();
+		$min_order = $minimum_order_amount > 0 ?  $minimum_order_amount : 50;
+		$cart_sub_total = $woocommerce->cart->subtotal;
+		
+		$surcharge = $this->get_surcharge_amount();
+		$surcharge = $surcharge > 0 ? $surcharge : 5;
+		
+		//var_dump($cart_sub_total);
+				
+		if($cart_sub_total < $min_order){		
+			$woocommerce->cart->add_fee( __('Surcharge', 'woocommerce'), $surcharge );
+			$woocommerce->cart->cart_contents_total += $surcharge;
+		}
 	}
 	
 }
