@@ -29,6 +29,10 @@ class WooCheckoutCustomization{
 		
 		//minimum order checking and surcharge add
 		add_action('woocommerce_calculate_totals', array(&$this, 'add_surcharge_if_applicable'));
+		
+		//minimum order notification on cart page
+		add_action('woocommerce_before_cart_table', array(&$this, 'show_cart_page_notice'));
+		
 	}
 	
 	
@@ -119,13 +123,32 @@ class WooCheckoutCustomization{
 		
 		$surcharge = $this->get_surcharge_amount();
 		$surcharge = $surcharge > 0 ? $surcharge : 5;
-		
-		//var_dump($cart_sub_total);
+			
 				
 		if($cart_sub_total < $min_order){		
 			$woocommerce->cart->add_fee( __('Surcharge', 'woocommerce'), $surcharge );
 			$woocommerce->cart->cart_contents_total += $surcharge;
 		}
+	}
+	
+	
+	//show minimum order notices if applicable on cart page
+	function show_cart_page_notice(){
+		global $woocommerce;
+		
+		$minimum_order_amount = $this->get_minimum_order_amount();
+		$min_order = $minimum_order_amount > 0 ?  $minimum_order_amount : 50;
+		$cart_sub_total = $woocommerce->cart->subtotal;
+		
+		$surcharge = $this->get_surcharge_amount();
+		$surcharge = $surcharge > 0 ? $surcharge : 5;
+		
+		if($cart_sub_total < $min_order){
+			?>
+			<div class="woocommerce-message surcharge-notice" style="text-transform:capitalize;" > We add a surcharge ( <?php echo woocommerce_price($surcharge); ?> ) if the minimum order ( <?php echo woocommerce_price($cart_sub_total); ?> ) does not meet.</div>
+			<?php 
+		}
+		
 	}
 	
 }
