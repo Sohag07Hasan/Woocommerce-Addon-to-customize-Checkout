@@ -31,7 +31,7 @@ class WooCheckoutCustomization{
 		add_action('woocommerce_calculate_totals', array(&$this, 'add_surcharge_if_applicable'));
 		
 		//minimum order notification on cart page
-		add_action('woocommerce_before_cart_table', array(&$this, 'show_cart_page_notice'));
+		//add_action('woocommerce_before_cart_table', array(&$this, 'show_cart_page_notice'));
 		
 	}
 	

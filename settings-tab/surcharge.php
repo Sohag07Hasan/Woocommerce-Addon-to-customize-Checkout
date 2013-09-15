@@ -23,7 +23,7 @@
 		</tr>
 		
 		<tr valign="top">
-			<th scope="row" class="titledesc"><label for="woocommerce_minimum_order_amount">Minimum Order enabled</label></th>
+			<th scope="row" class="titledesc"><label for="woocommerce_minimum_order_amount">Minimum Order Amount</label></th>
 			<td class="forminp forminp-checkbox">
 				<fieldset>
 					<legend class="screen-reader-text"><span>Minimum Order Amount (only integer) </span></legend>
